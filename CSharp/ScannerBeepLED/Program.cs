@@ -6,10 +6,10 @@
   Copyright:  ©2020 Zebra Technologies Corporation and/or its affiliates. All rights reserved.
 */
 
-using System;
-using System.Threading;
 using CoreScanner; // CoreScanner namespace
 using CoreScannerLib;
+using System;
+using System.Threading;
 
 namespace CoreScannerSnippet
 {
@@ -23,6 +23,7 @@ namespace CoreScannerSnippet
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
+
         {
             // Initialize CoreScanner COM object
             CoreScanner.CCoreScanner coreScannerObject = new CCoreScanner();
@@ -30,7 +31,7 @@ namespace CoreScannerSnippet
             int appHandle = 0;
             const short NumberOfScannerTypes = 1;
             short[] scannerTypes = new short[NumberOfScannerTypes];
-            scannerTypes[0] = (short) ScannerType.All; //  All scanner types
+            scannerTypes[0] = (short)ScannerType.All; //  All scanner types
             int status = -1;
             int currentScannerId = 1;
 
@@ -42,7 +43,7 @@ namespace CoreScannerSnippet
                     NumberOfScannerTypes, // Length of scanner types array 
                     out status); // Command execution success/failure return status 
 
-                if (status == (int) Status.Success)
+                if (status == (int)Status.Success)
                 {
                     Console.WriteLine("CoreScanner Open() - Success");
 
@@ -55,7 +56,7 @@ namespace CoreScannerSnippet
                         out outXml, // Output xml containing discovered scanners information 
                         out status); // Command execution success/failure return status   
 
-                    if (status == (int) Status.Success)
+                    if (status == (int)Status.Success)
                     {
                         Console.WriteLine("CoreScanner GetScanners()- Success");
                         Console.WriteLine(" Total Scanners : " + numOfScanners);
@@ -71,15 +72,15 @@ namespace CoreScannerSnippet
                             currentScannerId = scannerIdList[0];
 
                             // Trigger Scanner Beep
-                            Console.WriteLine("Beep scanner (one short high) using setAction");
+                            Console.WriteLine("Beep scanner (five short high) using setAction");
                             status = -1;
-                            int opCode = (int) Opcode.SetAction;
+                            int opCode = (int)Opcode.SetAction;
                             // Beep: one short high - input xml
                             string inXml = "<inArgs>" +
                                            "<scannerID>" + currentScannerId.ToString() + "</scannerID>" +
                                            "<cmdArgs>" +
-                                           "<arg-int>" + (int) BeepCode.OneShortHigh +  // Specify beeper code
-                                           "</arg-int>" + 
+                                           "<arg-int>" + (int)BeepCode.SlowHighLowHighLow +  // Specify beeper code
+                                           "</arg-int>" +
                                            "</cmdArgs>" +
                                            "</inArgs>";
 
@@ -88,7 +89,7 @@ namespace CoreScannerSnippet
                                 out outXml, // Output XML 
                                 out status); // Command execution success/failure return status  
 
-                            if (status == (int) Status.Success)
+                            if (status == (int)Status.Success)
                             {
                                 Console.WriteLine("Scanner Beep() scanner ID:[" +
                                                   currentScannerId.ToString() + "] - Success");
@@ -102,23 +103,23 @@ namespace CoreScannerSnippet
                             Console.WriteLine();
 
                             Console.WriteLine("Trigger scanner LED3 (Red) on using setAction");
-                            opCode = (int) Opcode.SetAction;
+                            int opCode2 = (int)Opcode.SetAction;
                             // Trigger scanner LED3(Red) on - input xml
-                            inXml = "<inArgs>" +
-                                    "<scannerID>" + currentScannerId.ToString() + "</scannerID>" +
-                                    "<cmdArgs>" +
-                                    "<arg-int>" + (int) LEDCode.Led3On +   // Specify LED code to switch on/off
-                                    "</arg-int>" +
-                                    "</cmdArgs>" +
-                                    "</inArgs>";
+                            string inXml2 = "<inArgs>" +
+                                      "<scannerID>" + currentScannerId.ToString() + "</scannerID>" +
+                                      "<cmdArgs>" +
+                                      "<arg-int>" + (int)LEDCode.Led3On +   // Specify LED code to switch on/off
+                                      "</arg-int>" +
+                                      "</cmdArgs>" +
+                                      "</inArgs>";
 
                             // Trigger scanner LED on
-                            coreScannerObject.ExecCommand(opCode, // Opcode: for Scanner LED on (SET_ACTION)
-                                ref inXml, // Input XML
+                            coreScannerObject.ExecCommand(opCode2, // Opcode: for Scanner LED on (SET_ACTION)
+                                ref inXml2, // Input XML
                                 out outXml, // Output XML 
                                 out status); // Command execution success/failure return status  
 
-                            if (status == (int) Status.Success)
+                            if (status == (int)Status.Success)
                             {
                                 Console.WriteLine("Scanner LED on, scanner ID:[" +
                                                   currentScannerId.ToString() + "] - Success");
@@ -129,33 +130,33 @@ namespace CoreScannerSnippet
                                                   currentScannerId.ToString() + "] - Failed. Error Code : " + status);
                             }
 
-                            Console.WriteLine("LED3 (red) switched on, press any key to continue.");
-                            while (!Console.KeyAvailable)
+                            //Console.WriteLine("LED3 (red) switched on, press any key to continue.");
+                            //while (!Console.KeyAvailable)
                             {
-                                Thread.Sleep(10);
+                                Thread.Sleep(500);
                             }
 
-                            Console.ReadKey();
-                            Console.WriteLine();
+                            //Console.ReadKey();
+                            //Console.WriteLine();
 
                             Console.WriteLine("Trigger scanner LED3 (Red) off using setAction");
-                            opCode = (int) Opcode.SetAction;
+                            int opCode3 = (int)Opcode.SetAction;
                             // Trigger scanner LED3 (Red) off - input xml
-                            inXml = "<inArgs>" +
+                            string inXml3 = "<inArgs>" +
                                     "<scannerID>" + currentScannerId.ToString() + "</scannerID>" +
                                     "<cmdArgs>" +
-                                    "<arg-int>" + (int) LEDCode.Led3Off +  // Specify LED code to switch on/off
+                                    "<arg-int>" + (int)LEDCode.Led3Off +  // Specify LED code to switch on/off
                                     "</arg-int>" +
                                     "</cmdArgs>" +
                                     "</inArgs>";
 
                             // Trigger scanner LED off 
-                            coreScannerObject.ExecCommand(opCode, // Opcode: for Scanner LED on (SET_ACTION)
-                                ref inXml, // Input XML
+                            coreScannerObject.ExecCommand(opCode3, // Opcode: for Scanner LED on (SET_ACTION)
+                                ref inXml3, // Input XML
                                 out outXml, // Output XML 
                                 out status); // Command execution success/failure return status  
 
-                            if (status == (int) Status.Success)
+                            if (status == (int)Status.Success)
                             {
                                 Console.WriteLine("Scanner LED off, scanner ID:[" +
                                                   currentScannerId.ToString() + "] - Success");
@@ -165,8 +166,48 @@ namespace CoreScannerSnippet
                                 Console.WriteLine("Scanner LED off, scanner ID:[" +
                                                   currentScannerId.ToString() + "] - Failed. Error Code : " + status);
                             }
+                            Console.WriteLine();
 
-                            Console.WriteLine("LED3 (red) switched off, press any key to continue.");
+                            {
+                                Thread.Sleep(500);
+                            }
+
+                            coreScannerObject.ExecCommand(opCode2, // Opcode: for Scanner LED on (SET_ACTION)
+                                 ref inXml2, // Input XML
+                                 out outXml, // Output XML 
+                                 out status); // Command execution success/failure return status  
+                            //while (!Console.KeyAvailable)
+                            {
+                                Thread.Sleep(500);
+                            }
+                            Console.WriteLine();
+                            coreScannerObject.ExecCommand(opCode3, // Opcode: for Scanner LED on (SET_ACTION)
+                              ref inXml3, // Input XML
+                              out outXml, // Output XML 
+                              out status); // Command execution success/failure return status  
+                            //while (!Console.KeyAvailable)
+                            {
+                                Thread.Sleep(500);
+                            }
+                            //Console.ReadKey();
+                            Console.WriteLine();
+                            coreScannerObject.ExecCommand(opCode2, // Opcode: for Scanner LED on (SET_ACTION)
+                                ref inXml2, // Input XML
+                                out outXml, // Output XML 
+                                out status); // Command execution success/failure return status  
+
+                            {
+                                Thread.Sleep(500);
+                            }
+                            Console.WriteLine();
+
+                            coreScannerObject.ExecCommand(opCode3, // Opcode: for Scanner LED on (SET_ACTION)
+                              ref inXml3, // Input XML
+                              out outXml, // Output XML 
+                              out status); // Command execution success/failure return status  
+                            Console.WriteLine();
+
+
                         }
                         else
                         {
@@ -187,7 +228,7 @@ namespace CoreScannerSnippet
                 coreScannerObject.Close(appHandle, // Application handle
                     out status); // Command execution success/failure return status
 
-                if (status == (int) Status.Success)
+                if (status == (int)Status.Success)
                 {
                     Console.WriteLine("CoreScanner Close() - Success");
                 }
